@@ -62,6 +62,7 @@ module.exports = function (grunt) {
       },
       test: {
         options: {
+          port: 9001,
           middleware: function (connect) {
             return [
               mountFolder(connect, '.tmp'),
@@ -102,6 +103,12 @@ module.exports = function (grunt) {
       unit: {
         configFile: 'karma.conf.js',
         singleRun: true
+      },
+      auto: {
+        configFile: 'karma.conf.js',
+        singleRun: false,
+        autoWatch: true,
+        port: 9002
       }
     },
     coffee: {
@@ -263,8 +270,6 @@ module.exports = function (grunt) {
 
   grunt.registerTask('server', [
     'clean:server',
-    'coffee:dist',
-    'compass:server',
     'livereload-start',
     'connect:livereload',
     'open',
@@ -273,18 +278,18 @@ module.exports = function (grunt) {
 
   grunt.registerTask('test', [
     'clean:server',
-    'coffee',
-    'compass',
     'connect:test',
-    'karma'
+    'karma:unit'
+  ]);
+
+  grunt.registerTask('autotest', [
+    'karma:auto'
   ]);
 
   grunt.registerTask('build', [
     'clean:dist',
     'jshint',
     'test',
-    'coffee',
-    'compass:dist',
     'useminPrepare',
     'imagemin',
     'cssmin',
